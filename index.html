@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Nuqthah Learn</title>
+
+    <style>
+        /* =========================
+       Nuqthah Learn — Ultra Premium (Single File)
+       Features:
+       - Better hero + stats + CTA
+       - Search + category chips filter
+       - Slider dots + auto-scroll (pause on hover)
+       - Modal preview (no langsung open link)
+       - Toast notification
+       - Dark mode + remember preference
+       - Loading skeleton shimmer
+       - Reduced-motion support
+       ========================= */
+
+        :root {
+            --bg: #f6f7fb;
+            --bg2: #eef2ff;
+            --surface: rgba(255, 255, 255, 0.78);
+            --surface-solid: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: rgba(15, 23, 42, 0.10);
+
+            --primary: #2563eb;
+            --primary2: #4f46e5;
+            --accent: #22c55e;
+
+            --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
+            --shadow-md: 0 18px 60px rgba(15, 23, 42, 0.12);
+            --shadow-glow: 0 20px 60px rgba(37, 99, 235, 0.22);
+
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+
+            --container: 1120px;
+            --ring: 0 0 0 4px rgba(37, 99, 235, 0.18);
+
+            --blur: 14px;
+        }
+
+        /* Dark theme variables */
+        body.dark {
+            --bg: #050816;
+            --bg2: #0b1028;
+            --surface: rgba(15, 23, 42, 0.66);
+            --surface-solid: #0b1220;
+            --text: #e5e7eb;
+            --muted: #a3adc2;
+            --border: rgba(255, 255, 255, 0.10);
+
+            --shadow-sm: 0 10px 26px rgba(0, 0, 0, 0.28);
+            --shadow-md: 0 26px 80px rgba(0, 0, 0, 0.35);
+            --shadow-glow: 0 24px 70px rgba(79, 70, 229, 0.25);
+
+            --ring: 0 0 0 4px rgba(99, 102, 241, 0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(1200px 600px at 20% -10%, rgba(37, 99, 235, 0.11), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(99, 102, 241, 0.10), transparent 55%),
+                radial-gradient(900px 520px at 40% 110%, rgba(34, 197, 94, 0.07), transparent 55%),
+                linear-gradient(180deg, var(--bg2), var(--bg));
+            color: var(--text);
+            line-height: 1.55;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: min(var(--container), calc(100% - 44px));
+            margin: 0 auto;
+        }
+
+        /* subtle grain overlay */
+        .grain {
+            pointer-events: none;
+            position: fixed;
+            inset: 0;
+            opacity: 0.07;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+            z-index: 1;
+        }
+
+        /* ===== TOP NAV ===== */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: color-mix(in srgb, var(--bg) 60%, transparent);
+            backdrop-filter: blur(var(--blur));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            min-width: 220px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--primary2));
+            box-shadow: var(--shadow-glow);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 16px;
+            background: radial-gradient(70% 70% at 30% 20%, rgba(255, 255, 255, 0.35), transparent 55%);
+            pointer-events: none;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            font-weight: 900;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 78%, transparent);
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--shadow-sm), var(--ring);
+        }
+
+        .btn-primary {
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary2));
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+        }
+
+        /* ===== HERO ===== */
+        header {
+            padding: 18px 0 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.25fr .75fr;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .hero-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            background: var(--surface);
+            backdrop-filter: blur(var(--blur));
+            box-shadow: var(--shadow-md);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            background:
+                radial-gradient(900px 380px at 10% 0%, rgba(37, 99, 235, 0.16), transparent 55%),
+                radial-gradient(700px 320px at 90% 20%, rgba(99, 102, 241, 0.13), transparent 60%),
+                radial-gradient(700px 280px at 50% 120%, rgba(34, 197, 94, 0.10), transparent 55%);
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .hero-top {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .hero-title h1 {
+            font-size: 28px;
+            font-weight: 950;
+            letter-spacing: -0.6px;
+        }
+
+        .hero-title p {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 14px;
+            max-width: 56ch;
+        }
+
+        .pill {
+            position: relative;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            color: color-mix(in srgb, var(--text) 90%, var(--muted));
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-cta {
+            position: relative;
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hero-stats {
+            position: relative;
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 72%, transparent);
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat b {
+            display: block;
+            font-weight: 950;
+            font-size: 15px;
+            letter-spacing: -0.2px;
+        }
+
+        .stat span {
+            display: block;
+            margin-top: 3px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        /* right side */
+        .hero-side {
+            display: grid;
+            gap: 12px;
+        }
+
+        .mini-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            background: var(--surface);
+            backdrop-filter: blur(var(--blur));
+            box-shadow: var(--shadow-sm);
+            padding: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mini-card h3 {
+            font-size: 14px;
+            font-weight: 950;
+            letter-spacing: -0.2px;
+        }
+
+        .mini-card p {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .mini-row {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            border-radius: 999px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: 850;
+            color: color-mix(in srgb, var(--text) 90%, var(--muted));
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chip:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chip.active {
+            border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+            background: radial-gradient(260px 120px at 20% 0%, rgba(37, 99, 235, 0.18), transparent 60%),
+                color-mix(in srgb, var(--surface-solid) 70%, transparent);
+        }
+
+        /* ===== SECTION ===== */
+        .section {
+            padding: 18px 0 26px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 950;
+            letter-spacing: -0.3px;
+            margin-bottom: 14px;
+        }
+
+        /* ===== TOOLBAR (search + pills) ===== */
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+            margin: 14px 0 16px;
+        }
+
+        .search {
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 14px 44px 14px 42px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            box-shadow: var(--shadow-sm);
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 750;
+            outline: none;
+            transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .search input:focus {
+            box-shadow: var(--shadow-sm), var(--ring);
+            border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+            background: color-mix(in srgb, var(--surface-solid) 84%, transparent);
+        }
+
+        .search .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.75;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .search .clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            cursor: pointer;
+            font-weight: 900;
+            color: color-mix(in srgb, var(--text) 80%, var(--muted));
+            display: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search .clear:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-50%) translateY(-1px);
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* ===== SLIDER ===== */
+        .slider-wrap {
+            position: relative;
+        }
+
+        .slider {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 6px 2px 12px 2px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .slider::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .slider::-webkit-scrollbar-thumb {
+            background: rgba(15, 23, 42, 0.14);
+            border-radius: 999px;
+        }
+
+        .slide {
+            scroll-snap-align: start;
+            min-width: 320px;
+            height: 205px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease;
+            outline: none;
+        }
+
+        .slide:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+        }
+
+        .slide:focus {
+            box-shadow: var(--shadow-md), var(--ring);
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.02);
+            transition: transform .35s ease;
+            filter: saturate(1.05);
+        }
+
+        .slide:hover img {
+            transform: scale(1.07);
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.10) 60%, rgba(0, 0, 0, 0)),
+                radial-gradient(600px 220px at 20% 0%, rgba(37, 99, 235, 0.20), transparent 60%);
+            pointer-events: none;
+        }
+
+        .slide .tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 2;
+            font-size: 12px;
+            font-weight: 950;
+            color: rgba(255, 255, 255, 0.92);
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            padding: 6px 10px;
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+        }
+
+        .slide .badge-right {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 2;
+            font-size: 11px;
+            font-weight: 950;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(16, 185, 129, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 18px 50px rgba(34, 197, 94, 0.18);
+        }
+
+        .slide span {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            z-index: 2;
+            color: white;
+            font-size: 16px;
+            font-weight: 950;
+            letter-spacing: -0.2px;
+            text-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+            opacity: 0.9;
+            user-select: none;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(100, 116, 139, 0.35);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: transform .2s ease, width .2s ease, background .2s ease;
+        }
+
+        .dot.active {
+            width: 20px;
+            background: color-mix(in srgb, var(--primary) 60%, rgba(100, 116, 139, 0.35));
+            transform: translateY(-1px);
+        }
+
+        /* ===== GRID ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .class-card {
+            position: relative;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            backdrop-filter: blur(var(--blur));
+            padding: 18px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform .22s ease, box-shadow .22s ease, background .22s ease, border-color .22s ease;
+            outline: none;
+            min-height: 132px;
+        }
+
+        .class-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+        }
+
+        .class-card:focus {
+            box-shadow: var(--shadow-md), var(--ring);
+        }
+
+        .class-card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            background: radial-gradient(520px 220px at 10% 0%, rgba(37, 99, 235, 0.16), transparent 55%);
+            opacity: 0;
+            transition: opacity .22s ease;
+            pointer-events: none;
+        }
+
+        .class-card:hover::before {
+            opacity: 1;
+        }
+
+        .class-card h3 {
+            font-size: 16px;
+            font-weight: 950;
+            letter-spacing: -0.25px;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .class-card p {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 750;
+            position: relative;
+            z-index: 2;
+            max-width: 36ch;
+        }
+
+        .meta {
+            margin-top: 12px;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            color: color-mix(in srgb, var(--text) 85%, var(--muted));
+            font-size: 12px;
+            font-weight: 850;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            font-size: 11px;
+            font-weight: 950;
+            letter-spacing: 0.4px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: white;
+            z-index: 2;
+        }
+
+        .badge.new {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(79, 70, 229, 0.95));
+        }
+
+        .badge.popular {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.95), rgba(245, 158, 11, 0.95));
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(249, 115, 22, 0.95));
+            box-shadow: 0 18px 55px rgba(245, 158, 11, 0.22);
+        }
+
+        .class-card.elite {
+            background: linear-gradient(135deg, #0b1220, #1f2a44);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            color: white;
+            box-shadow: 0 26px 90px rgba(2, 6, 23, 0.35);
+        }
+
+        .class-card.elite p {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .class-card.elite .meta {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .class-card.elite::before {
+            background: radial-gradient(520px 240px at 10% 0%, rgba(99, 102, 241, 0.35), transparent 55%);
+        }
+
+        /* ===== REGISTER ===== */
+        .register-panel {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            background: var(--surface);
+            backdrop-filter: blur(var(--blur));
+            box-shadow: var(--shadow-md);
+            padding: 26px 18px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-panel::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            background: radial-gradient(900px 340px at 50% 0%, rgba(37, 99, 235, 0.18), transparent 60%);
+            pointer-events: none;
+        }
+
+        .register-panel h2 {
+            position: relative;
+            font-size: 22px;
+            font-weight: 950;
+            letter-spacing: -0.4px;
+        }
+
+        .register-panel p {
+            position: relative;
+            color: var(--muted);
+            margin-top: 6px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        .primary-btn {
+            position: relative;
+            padding: 14px 22px;
+            font-size: 15px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary2));
+            color: #fff;
+            font-weight: 950;
+            cursor: pointer;
+            box-shadow: var(--shadow-glow);
+            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 26px 80px rgba(37, 99, 235, 0.30);
+            filter: brightness(1.02);
+        }
+
+        .sub-note {
+            position: relative;
+            margin-top: 10px;
+            font-size: 12px;
+            color: color-mix(in srgb, var(--muted) 90%, var(--text));
+            font-weight: 750;
+        }
+
+        footer {
+            padding: 22px 0 28px;
+            font-size: 13px;
+            color: color-mix(in srgb, var(--muted) 92%, var(--text));
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 200;
+        }
+
+        .modal {
+            width: min(860px, 100%);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+            backdrop-filter: blur(var(--blur));
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transform: translateY(8px);
+            opacity: 0;
+            transition: transform .22s ease, opacity .22s ease;
+        }
+
+        .modal-overlay.show .modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-head .title {
+            font-weight: 950;
+            letter-spacing: -0.2px;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            cursor: pointer;
+            font-weight: 950;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modal-body {
+            padding: 14px;
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .modal-preview {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            background: #000;
+            min-height: 240px;
+            position: relative;
+        }
+
+        .modal-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.05);
+        }
+
+        .modal-info {
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+            box-shadow: var(--shadow-sm);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-info p {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 750;
+            margin: 0;
+        }
+
+        .modal-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%) translateY(12px);
+            opacity: 0;
+            z-index: 300;
+            background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            box-shadow: var(--shadow-md);
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 850;
+            color: color-mix(in srgb, var(--text) 92%, var(--muted));
+            backdrop-filter: blur(var(--blur));
+            transition: transform .22s ease, opacity .22s ease;
+            max-width: min(560px, calc(100% - 40px));
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== SKELETON (optional feel) ===== */
+        .skeleton {
+            position: relative;
+        }
+
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 1.4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* ===== Reduced motion ===== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .slide {
+                min-width: 360px;
+                height: 220px;
+            }
+
+            .hero-title h1 {
+                font-size: 30px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grain"></div>
+
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div class="container nav-inner">
+            <div class="brand" role="button" tabindex="0" onclick="scrollToSection('#top')"
+                aria-label="Kembali ke atas">
+                <div class="brand-mark">N</div>
+                <div class="brand-text">
+                    <strong>Nuqthah Learn</strong>
+                    <span>Platform Pembelajaran Digital</span>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn" onclick="scrollToSection('#spotlight')">Spotlight</button>
+                <button class="btn" onclick="scrollToSection('#kelas')">Kelas</button>
+                <button class="btn btn-icon" onclick="toggleDark()" title="Dark mode" aria-label="Dark mode">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <button class="btn btn-primary" onclick="scrollToSection('#daftar')">Daftar</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="top">
+        <div class="container">
+            <div class="hero">
+                <div class="hero-card">
+                    <div class="hero-top">
+                        <div class="hero-title">
+                            <h1>Nuqthah Learn</h1>
+                            <p>
+                                Platform pembelajaran digital dengan materi terstruktur, latihan terarah, dan akses
+                                kelas premium yang rapi & modern.
+                            </p>
+                        </div>
+                        <div class="pill">✨ Ultra Premium UI</div>
+                    </div>
+
+                    <div class="hero-cta">
+                        <button class="btn btn-primary" onclick="scrollToSection('#kelas')">Mulai Belajar</button>
+                        <button class="btn" onclick="openModal({
+              title:'Kenalan dulu',
+              desc:'Lihat kelas, pilih materi, dan akses link file dengan aman lewat preview.',
+              img:'https://picsum.photos/900/520?99',
+              url:'https://drive.google.com'
+            })">Lihat Preview</button>
+                        <button class="btn"
+                            onclick="showToast('Tip: Kamu bisa cari kelas lewat kolom pencarian 😉')">Tips</button>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <b>10+ Spotlight</b>
+                            <span>Materi unggulan</span>
+                        </div>
+                        <div class="stat">
+                            <b>4 Kelas</b>
+                            <span>Dasar → Elite</span>
+                        </div>
+                        <div class="stat">
+                            <b>Search & Filter</b>
+                            <span>Lebih cepat cari materi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-side">
+                    <div class="mini-card">
+                        <h3>Filter Cepat</h3>
+                        <p>Pilih kategori untuk menyaring kelas secara instan.</p>
+                        <div class="mini-row" id="chipsTop">
+                            <div class="chip active" data-filter="all" onclick="setCategory('all', this)">Semua</div>
+                            <div class="chip" data-filter="dasar" onclick="setCategory('dasar', this)">Dasar</div>
+                            <div class="chip" data-filter="menengah" onclick="setCategory('menengah', this)">Menengah
+                            </div>
+                            <div class="chip" data-filter="intensif" onclick="setCategory('intensif', this)">Intensif
+                            </div>
+                            <div class="chip" data-filter="elite" onclick="setCategory('elite', this)">Elite</div>
+                        </div>
+                    </div>
+
+                    <div class="mini-card">
+                        <h3>Keamanan Link</h3>
+                        <p>Link dibuka melalui preview modal agar terlihat lebih profesional dan rapi.</p>
+                        <div class="mini-row">
+                            <div class="chip" onclick="showToast('Preview aktif ✅')">✅ Preview</div>
+                            <div class="chip" onclick="showToast('Auto-scroll slider aktif ✅')">🎞️ Slider</div>
+                            <div class="chip" onclick="showToast('Dark mode tersedia ✅')">🌙 Dark</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SPOTLIGHT -->
+    <section class="section" id="spotlight">
+        <div class="container">
+            <h2 class="section-title">Spotlight</h2>
+
+            <div class="toolbar">
+                <div class="search">
+                    <div class="icon">🔎</div>
+                    <input id="searchInput" type="text" placeholder="Cari kelas/materi… (contoh: fiqh, elite, latihan)"
+                        oninput="filterAll()" />
+                    <button class="clear" id="clearBtn" onclick="clearSearch()" title="Hapus">×</button>
+                </div>
+
+                <div class="toolbar-right">
+                    <button class="btn" onclick="toggleAutoSlider()" id="autoBtn">⏸ Pause</button>
+                </div>
+            </div>
+
+            <div class="slider-wrap">
+                <div class="slider" id="slider" aria-label="Spotlight slider">
+                    <!-- Slides (data props for modal) -->
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Kelas Dasar"
+                        data-desc="Materi pengantar, PDF, dan pondasi awal pembelajaran."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?1">
+                        <div class="tag">Populer</div>
+                        <div class="badge-right">NEW</div>
+                        <img src="https://picsum.photos/700/450?1" alt="Kelas Dasar">
+                        <span>Kelas Dasar</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Kelas Menengah"
+                        data-desc="Pendalaman materi dengan struktur yang lebih lengkap dan rapi."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?2">
+                        <div class="tag">Upgrade</div>
+                        <img src="https://picsum.photos/700/450?2" alt="Kelas Menengah">
+                        <span>Kelas Menengah</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Kelas Intensif"
+                        data-desc="Latihan dan pembahasan untuk mempercepat pemahaman."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?3">
+                        <div class="tag">Latihan</div>
+                        <img src="https://picsum.photos/700/450?3" alt="Kelas Intensif">
+                        <span>Kelas Intensif</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Kelas Elite"
+                        data-desc="Akses eksklusif untuk materi premium dan kurasi terbaik."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?4">
+                        <div class="tag">Eksklusif</div>
+                        <div class="badge-right">VIP</div>
+                        <img src="https://picsum.photos/700/450?4" alt="Kelas Elite">
+                        <span>Kelas Elite</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Fiqh"
+                        data-desc="Materi fiqh terstruktur dan mudah diikuti." data-url="https://drive.google.com"
+                        data-img="https://picsum.photos/900/520?5">
+                        <div class="tag">Materi</div>
+                        <img src="https://picsum.photos/700/450?5" alt="Fiqh">
+                        <span>Fiqh</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Ushul Fiqh"
+                        data-desc="Pengantar ushul fiqh dan kaidah-kaidah dasar." data-url="https://drive.google.com"
+                        data-img="https://picsum.photos/900/520?6">
+                        <div class="tag">Materi</div>
+                        <img src="https://picsum.photos/700/450?6" alt="Ushul Fiqh">
+                        <span>Ushul Fiqh</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Nahwu"
+                        data-desc="Materi nahwu untuk memperkuat struktur bahasa Arab."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?7">
+                        <div class="tag">Bahasa</div>
+                        <img src="https://picsum.photos/700/450?7" alt="Nahwu">
+                        <span>Nahwu</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Shorof"
+                        data-desc="Materi shorof dengan contoh-contoh praktis." data-url="https://drive.google.com"
+                        data-img="https://picsum.photos/900/520?8">
+                        <div class="tag">Bahasa</div>
+                        <img src="https://picsum.photos/700/450?8" alt="Shorof">
+                        <span>Shorof</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Balaghah"
+                        data-desc="Belajar balaghah untuk memperindah pemahaman bahasa."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?9">
+                        <div class="tag">Bahasa</div>
+                        <img src="https://picsum.photos/700/450?9" alt="Balaghah">
+                        <span>Balaghah</span>
+                    </button>
+
+                    <button class="slide" onclick="openFromSlide(this)" data-title="Tafsir"
+                        data-desc="Materi tafsir dengan pembahasan ringkas dan jelas."
+                        data-url="https://drive.google.com" data-img="https://picsum.photos/900/520?10">
+                        <div class="tag">Tafsir</div>
+                        <img src="https://picsum.photos/700/450?10" alt="Tafsir">
+                        <span>Tafsir</span>
+                    </button>
+                </div>
+
+                <div class="dots" id="dots" aria-label="Slider dots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KELAS -->
+    <section class="section" id="kelas">
+        <div class="container">
+            <h2 class="section-title">Kelas Pembelajaran</h2>
+
+            <div class="toolbar">
+                <div class="mini-row" id="chips">
+                    <div class="chip active" data-filter="all" onclick="setCategory('all', this)">Semua</div>
+                    <div class="chip" data-filter="dasar" onclick="setCategory('dasar', this)">Dasar</div>
+                    <div class="chip" data-filter="menengah" onclick="setCategory('menengah', this)">Menengah</div>
+                    <div class="chip" data-filter="intensif" onclick="setCategory('intensif', this)">Intensif</div>
+                    <div class="chip" data-filter="elite" onclick="setCategory('elite', this)">Elite</div>
+                </div>
+
+                <div class="toolbar-right">
+                    <button class="btn" onclick="showToast('Klik kartu untuk preview & buka link ✅')">ℹ️ Info</button>
+                </div>
+            </div>
+
+            <div class="card-grid" id="grid">
+                <div class="class-card" tabindex="0" data-cat="dasar" data-title="Kelas Dasar"
+                    data-desc="Materi pengantar & PDF untuk pondasi awal." data-url="https://drive.google.com"
+                    data-img="https://picsum.photos/900/520?11" onclick="openFromCard(this)">
+                    <div class="badge new">NEW</div>
+                    <h3>Kelas Dasar</h3>
+                    <p>Materi pengantar & PDF</p>
+                    <div class="meta">📘 Beginner Friendly</div>
+                </div>
+
+                <div class="class-card" tabindex="0" data-cat="menengah" data-title="Kelas Menengah"
+                    data-desc="Pendalaman materi, struktur lebih lengkap." data-url="https://drive.google.com"
+                    data-img="https://picsum.photos/900/520?12" onclick="openFromCard(this)">
+                    <div class="badge popular">POPULAR</div>
+                    <h3>Kelas Menengah</h3>
+                    <p>Pendalaman materi</p>
+                    <div class="meta">📗 Intermediate</div>
+                </div>
+
+                <div class="class-card" tabindex="0" data-cat="intensif" data-title="Kelas Intensif"
+                    data-desc="Latihan & pembahasan intensif." data-url="https://drive.google.com"
+                    data-img="https://picsum.photos/900/520?13" onclick="openFromCard(this)">
+                    <h3>Kelas Intensif</h3>
+                    <p>Latihan & pembahasan</p>
+                    <div class="meta">📝 Practice Mode</div>
+                </div>
+
+                <div class="class-card elite" tabindex="0" data-cat="elite" data-title="Kelas Elite"
+                    data-desc="Akses eksklusif untuk materi premium." data-url="https://drive.google.com"
+                    data-img="https://picsum.photos/900/520?14" onclick="openFromCard(this)">
+                    <div class="badge premium">PREMIUM</div>
+                    <h3>Kelas Elite</h3>
+                    <p>Akses eksklusif</p>
+                    <div class="meta">👑 Premium Access</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DAFTAR -->
+    <section class="section" id="daftar">
+        <div class="container">
+            <div class="register-panel">
+                <h2>Belum Terdaftar?</h2>
+                <p>Isi formulir pendaftaran melalui Google Form</p>
+
+                <button class="primary-btn" onclick="openLink('https://forms.gle/xxxx')">
+                    Daftar Sekarang
+                </button>
+
+                <div class="sub-note">Respon cepat • Akses materi setelah verifikasi</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">© 2026 Nuqthah Learn</div>
+    </footer>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" aria-hidden="true" onclick="overlayClose(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="Preview">
+            <div class="modal-head">
+                <div class="title" id="modalTitle">Preview</div>
+                <button class="modal-close" onclick="closeModal()" aria-label="Tutup">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-preview" id="modalPreview">
+                    <img id="modalImg" src="https://picsum.photos/900/520?20" alt="Preview">
+                </div>
+                <div class="modal-info">
+                    <p id="modalDesc">Deskripsi</p>
+                    <div class="meta" id="modalMeta">🔗 Link siap dibuka</div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="openBtn" onclick="openModalLink()">Buka Link</button>
+                        <button class="btn" onclick="copyLink()">Copy Link</button>
+                        <button class="btn" onclick="showToast('Disimpan (dummy) ✅')">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">Toast</div>
+
+    <script>
+        /* =========================
+           JS — Premium Behaviors
+           ========================= */
+
+        // ------- Smooth scroll -------
+        function scrollToSection(selector) {
+            const el = document.querySelector(selector);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // ------- Open link (safe) -------
+        function openLink(url) {
+            const win = window.open(url, "_blank", "noopener,noreferrer");
+            if (!win) window.location.href = url;
+        }
+
+        // ------- Theme (remember) -------
+        const themeIcon = document.getElementById("themeIcon");
+        const savedTheme = localStorage.getItem("nuqthah_theme");
+        if (savedTheme === "dark") {
+            document.body.classList.add("dark");
+            themeIcon.textContent = "☀️";
+        }
+
+        function toggleDark() {
+            document.body.classList.toggle("dark");
+            const isDark = document.body.classList.contains("dark");
+            localStorage.setItem("nuqthah_theme", isDark ? "dark" : "light");
+            themeIcon.textContent = isDark ? "☀️" : "🌙";
+            showToast(isDark ? "Dark mode aktif 🌙" : "Light mode aktif ☀️");
+        }
+
+        // ------- Toast -------
+        const toast = document.getElementById("toast");
+        let toastTimer;
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+        }
+
+
+
+
+
+        // ------- Modal Preview -------
+        function openModal({ title, desc, img, url }) {
+            document.getElementById("modalTitle").textContent = title;
+            document.getElementById("modalDesc").textContent = desc;
+            document.getElementById("modalImg").src = img;
+            document.getElementById("modalImg").alt = title;
+            document.getElementById("modalMeta").textContent = `Link: ${url}`;
+            document.getElementById("openBtn").setAttribute("onclick", `openLink('${url}')`);
+            document.getElementById("modalOverlay").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+
+        function overlayClose(e) {
+            if (e.target === document.getElementById("modalOverlay")) {
+                closeModal();
+            }
+        }
+
+        // ------- Auto Scroll for Slider -------
+        let autoScroll = true;
+        const slider = document.getElementById("slider");
+        const sliderDots = document.getElementById("dots");
+
+        function pauseAutoScroll() {
+            autoScroll = !autoScroll;
+            document.getElementById("autoBtn").textContent = autoScroll ? "⏸ Pause" : "▶ Play";
+        }
+
+        let scrollIndex = 0;
+        const slides = slider.querySelectorAll(".slide");
+        const totalSlides = slides.length;
+
+        function slideScroll() {
+            if (autoScroll) {
+                scrollIndex = (scrollIndex + 1) % totalSlides;
+                slider.scrollTo({ left: slides[scrollIndex].offsetLeft, behavior: "smooth" });
+                updateDots();
+            }
+        }
+
+        function updateDots() {
+            const dots = sliderDots.querySelectorAll(".dot");
+            dots.forEach((dot, index) => {
+                dot.classList.toggle("active", index === scrollIndex);
+            });
+        }
+
+        function generateDots() {
+            sliderDots.innerHTML = "";
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement("div");
+                dot.classList.add("dot");
+                dot.setAttribute("aria-label", `Slide ${i + 1}`);
+                dot.addEventListener("click", () => {
+                    scrollIndex = i;
+                    slider.scrollTo({ left: slides[i].offsetLeft, behavior: "smooth" });
+                    updateDots();
+                });
+                sliderDots.appendChild(dot);
+            }
+            updateDots();
+        }
+
+        setInterval(slideScroll, 5000);
+        generateDots();
+
+        // ------- Filter Search -------
+        function filterAll() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const cards = document.querySelectorAll(".class-card");
+            cards.forEach(card => {
+                const title = card.getAttribute("data-title").toLowerCase();
+                const desc = card.getAttribute("data-desc").toLowerCase();
+                if (title.includes(searchValue) || desc.includes(searchValue)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            const clearBtn = document.getElementById("clearBtn");
+            clearBtn.style.display = searchValue ? "block" : "none";
+        }
+
+        function clearSearch() {
+            document.getElementById("searchInput").value = "";
+            filterAll();
+        }
+
+        // ------- Category Filter Chips -------
+        function setCategory(category, chip) {
+            const chips = document.querySelectorAll(".chip");
+            chips.forEach(chip => chip.classList.remove("active"));
+            chip.classList.add("active");
+
+            const classCards = document.querySelectorAll(".class-card");
+            classCards.forEach(card => {
+                if (category === "all" || card.getAttribute("data-cat") === category) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // ------- Modal Close Button -------
+        document.querySelectorAll(".modal-close").forEach(btn => {
+            btn.addEventListener("click", closeModal);
+        });
+
+    </script>
+</body>
+
+</html>
